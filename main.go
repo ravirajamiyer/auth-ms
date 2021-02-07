@@ -16,14 +16,29 @@ func homePage(w http.ResponseWriter, r *http.Request){
 
 func handleRequests() {
     router := mux.NewRouter().StrictSlash(true)
-
     router.HandleFunc("/", homePage)
     router.HandleFunc("/users", returnAllUsers)
+    router.HandleFunc("/user/{id}", returnSingleUser)
     log.Fatal(http.ListenAndServe(":8080", router))
 }
 
 func returnAllUsers(w http.ResponseWriter, r *http.Request){
+    fmt.Println("Returning all users")
     json.NewEncoder(w).Encode(users)
+}
+
+func returnSingleUser(w http.ResponseWriter, r *http.Request) {
+    vars := mux.Vars(r)
+    key := vars["id"]
+
+    // Loop over all of our Articles
+    // if the article.Id equals the key we pass in
+    // return the article encoded as JSON
+    for _, user := range users {
+        if user.Id == key {
+            json.NewEncoder(w).Encode(user)
+        }
+    }
 }
 
 func main() {
