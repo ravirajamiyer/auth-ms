@@ -5,6 +5,7 @@ import (
     "log"
     "net/http"
     "encoding/json"
+    "github.com/gorilla/mux"
 )
 
 func homePage(w http.ResponseWriter, r *http.Request){
@@ -14,9 +15,11 @@ func homePage(w http.ResponseWriter, r *http.Request){
 }
 
 func handleRequests() {
-    http.HandleFunc("/", homePage)
-    http.HandleFunc("/users", returnAllUsers)
-    log.Fatal(http.ListenAndServe(":8080", nil))
+    router := mux.NewRouter().StrictSlash(true)
+
+    router.HandleFunc("/", homePage)
+    router.HandleFunc("/users", returnAllUsers)
+    log.Fatal(http.ListenAndServe(":8080", router))
 }
 
 func returnAllUsers(w http.ResponseWriter, r *http.Request){
@@ -25,8 +28,8 @@ func returnAllUsers(w http.ResponseWriter, r *http.Request){
 
 func main() {
     users = []User{
-        User{FirstName: "User1", LastName: "FirstUser", Email: "user1@gmail.com"},
-        User{FirstName: "User2", LastName: "2nduser", Email: "user2@gmail.com"},
+        User{Id: "1", FirstName: "User1", LastName: "FirstUser", Email: "user1@gmail.com"},
+        User{Id: "2", FirstName: "User2", LastName: "2nduser", Email: "user2@gmail.com"},
     }
 
     handleRequests()
@@ -39,6 +42,7 @@ type Message struct {
 
 
 type User struct {
+    Id      string `json:"Id"`
     FirstName string `json:"FirstName"`
     LastName string `json:"LastName"`
     Email string `json:"Email"`
