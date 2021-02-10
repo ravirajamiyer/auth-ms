@@ -2,6 +2,8 @@
 
 A microservice for identity, authentication, and authorization
 
+WARNING: This needs a Docker container of postgres DB to try it out. May not work out of the box
+
 
 ## Usage
 
